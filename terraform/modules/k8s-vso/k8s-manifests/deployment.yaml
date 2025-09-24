@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-chatbot
+  namespace: ai-chatbot
+  labels:
+    app: ai-chatbot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ai-chatbot
+  template:
+    metadata:
+      labels:
+        app: ai-chatbot
+    spec:
+      containers:
+        - name: ai-chatbot
+          image: 764686269646.dkr.ecr.us-west-2.amazonaws.com/ai-chatbot-eks:latest
+          ports:
+            - containerPort: 5000
+          env:
+            - name: GEMINI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: chatbotkv
+                  key: GEMINI_API_KEY
+            - name: PRISMA_AIRS_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: chatbotkv
+                  key: PRISMA_AIRS_API_KEY
+            - name: PRISMA_AIRS_PROFILE
+              valueFrom:
+                secretKeyRef:
+                  name: chatbotkv
+                  key: PRISMA_AIRS_PROFILE
+          readinessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-chatbot-svc
+  namespace: ai-chatbot
+  labels:
+    app: ai-chatbot
+spec:
+  selector:
+    app: ai-chatbot
+  ports:
+    - port: 80
+      targetPort: 5000
+      protocol: TCP
+  type: LoadBalancer
