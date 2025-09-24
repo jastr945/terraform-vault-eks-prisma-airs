@@ -37,9 +37,8 @@ def scan_with_prisma_airs(prompt: str) -> dict:
     }
     payload = {
         "metadata": {
-            "ai_model": "Google GEMINI 2.0 Flash - Test AIRS with Vault, Openshift",
-            "app_name": "Vault-Openshift-AIRS-test",
-            "app_user": "Vault-Openshift-AIRS"
+            "ai_model": "Google GEMINI 2.0 Flash - Test AIRS with Vault, EKS",
+            "app_name": "Vault-EKS-AIRS-test",
         },
         "contents": [
             {"prompt": prompt}

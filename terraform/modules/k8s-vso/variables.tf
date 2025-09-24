@@ -49,3 +49,8 @@ variable "vault_addr" {
   description = "Address/URL of Vault (e.g. https://<vault-host>:8200)"
   type        = string
 }
+
+variable "vault_kubernetes_auth_backend_path" {
+  description = "Path where the Kubernetes auth method is enabled in Vault"
+  type        = string
+}

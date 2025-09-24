@@ -16,6 +16,7 @@ Secure, Terraform-deployed AI workloads on AWS EKS, with secrets managed via HCP
 ## Prerequisites
 
 - AWS account and CLI access
+- Docker
 - Terraform v1.13.3 or later
 - Helm
 - Kubectl
@@ -51,3 +52,38 @@ To stand up the basic infrastructure, a few credentials must be configured:
 At the end of this setup, Terraform provisions the core infrastructure:
 - HCP Vault Dedicated cluster
 - AWS EKS cluster
+
+## Dockerize the app
+
+Build a Docker image and upload it to ECR.
+
+Exit the Terraform repo and navigate to the app repo
+
+cd ../app
+docker buildx build --platform linux/amd64 -t ai-chatbot-eks:latest .
+aws ecr get-login-password --region us-west-2 \
+  | docker login --username AWS \
+  --password-stdin <aws_account_number>.dkr.ecr.us-west-2.amazonaws.com
+
+aws ecr create-repository --repository-name ai-chatbot-eks --region us-west-2
+
+docker tag ai-chatbot-eks:latest 764686269646.dkr.ecr.us-west-2.amazonaws.com/ai-chatbot-eks:latest
+
+docker push <aws_account_number>.dkr.ecr.us-west-2.amazonaws.com/ai-chatbot-eks:latest
+
+## EKS and VSO setup
+
+Log into the newly created cluster
+
+aws eks update-kubeconfig --name ai-chatbot-cluster --region us-west-2
+
+Navigate to the repo with Kubernetes manifests:
+ cd ../terraform/k8s-vso/k8s_manifests
+
+Create namespace
+
+kubectl apply -f namespace.yaml
+
+Create a service account and Define a service account token secret that is used by Vault to authenticate to Kubernetes.
+
+kubectl -f vault_auth.yaml
