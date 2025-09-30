@@ -3,13 +3,13 @@ Secure, Terraform-deployed AI workloads on AWS EKS, with secrets managed via HCP
 
 ## Why This Matters
 
-In today’s fast-paced AI landscape, securely deploying and managing AI workloads is a critical challenge. Organizations need a solution that not only scales effortlessly but also ensures that sensitive data—like API keys and model secrets—is protected at every layer. This repository addresses that challenge by combining best-in-class tools for infrastructure automation, secrets management, and runtime security.
+In today’s fast-paced AI landscape, securely deploying and managing AI workloads is a critical challenge. Organizations need a solution that not only scales effortlessly but also ensures that sensitive data - like API keys and model secrets - is protected at every layer. This repository addresses that challenge by combining best-in-class tools for infrastructure automation, secrets management, and runtime security.
 
-By leveraging Terraform, this solution automates the provisioning of both the AWS EKS cluster and the  HashiCorp Vault Dedicated cluster, drastically reducing the time and complexity of setup. The Vault Secrets Operator (VSO) ensures that secrets are dynamically injected into the AI workload, eliminating manual handling of sensitive information and reducing operational risk.
+By leveraging **Terraform**, this solution automates the provisioning of both the **AWS EKS** cluster and the **HashiCorp Vault Dedicated** cluster, drastically reducing the time and complexity of setup. The **Vault Secrets Operator (VSO)** ensures that secrets are dynamically injected into the AI workload, eliminating manual handling of sensitive information and reducing operational risk.
 
-Prisma AIRS AI Runtime Security - API Intercept by Palo Alto Networks provides proactive AI guardrails, monitoring the behavior of the FastAPI chatbot in real-time. This means your AI workloads are not only secure from a secrets perspective but also protected from unintended or unsafe outputs, helping organizations meet compliance requirements and maintain trust with end users.
+**Prisma AIRS AI Runtime Security** - API Intercept by **Palo Alto Networks** provides proactive AI guardrails, monitoring the behavior of the FastAPI chatbot in real-time. This means your AI workloads are not only secure from a secrets perspective but also protected from unintended or unsafe outputs, helping organizations meet compliance requirements and maintain trust with end users.
 
-With this deployment pattern, teams gain a fully automated, secure, and scalable AI environment that can be easily replicated across projects or accounts, allowing developers to focus on building intelligence rather than managing infrastructure or worrying about security gaps. It’s the intersection of speed, safety, and operational efficiency—exactly what modern AI teams need to accelerate innovation responsibly.
+With this deployment pattern, teams gain a fully automated, secure, and scalable AI environment that can be easily replicated across projects or accounts, allowing developers to focus on building the internal logic of AI applications rather than managing infrastructure or worrying about security gaps. It’s the intersection of speed, safety, and operational efficiency - exactly what modern AI teams need to accelerate innovation responsibly.
 
 ## What is deployed in this repo
 
