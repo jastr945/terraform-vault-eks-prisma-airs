@@ -156,11 +156,11 @@ resource "aws_eks_node_group" "default" {
 #   }
 # }
 
-resource "kubernetes_namespace_v1" "ai_chatbot_app" {
-  metadata {
-    name = "ai-chatbot"
-  }
-}
+# resource "kubernetes_namespace_v1" "ai_chatbot_app" {
+#   metadata {
+#     name = "ai-chatbot"
+#   }
+# }
 # #   lifecycle {
 # #     ignore_changes = [
 # #       metadata[0].annotations["openshift.io/sa.scc.mcs"],

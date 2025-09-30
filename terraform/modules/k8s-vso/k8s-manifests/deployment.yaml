@@ -7,6 +7,11 @@ metadata:
     app: ai-chatbot
 spec:
   replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
   selector:
     matchLabels:
       app: ai-chatbot
@@ -41,7 +46,14 @@ spec:
               path: /healthcheck
               port: 5000
             initialDelaySeconds: 5
-            periodSeconds: 10
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 1
 ---
 apiVersion: v1
 kind: Service

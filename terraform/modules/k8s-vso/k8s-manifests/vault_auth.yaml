@@ -62,3 +62,11 @@ spec:
   rolloutRestartTargets:
     - kind: Deployment
       name: ai-chatbot
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: chatbot
+  namespace: ai-chatbot
+  annotations:
+    vault.hashicorp.com/alias-metadata-AppName: "chatbot"

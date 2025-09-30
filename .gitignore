@@ -37,4 +37,4 @@ override.tf.json
 terraform.rc
 
 *.pem
-terraform/modules/k8s-vso/k8s-manifests/vault-operator-values.yaml
+vault-operator-values.yaml
