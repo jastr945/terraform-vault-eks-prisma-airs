@@ -273,7 +273,9 @@ Check if pods are running:
 ```sh
 oc get pods -n trusted-ai
 ```
+
 You should see 3 pods: one for each app, and one for Terraform MCP.
+
 ---
 
 ### 9. Access the App
