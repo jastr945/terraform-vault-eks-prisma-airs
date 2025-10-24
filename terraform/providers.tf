@@ -16,9 +16,9 @@ terraform {
       source  = "hashicorp/kubernetes"
       version = "2.38.0"
     }
-    helm = {
-      source  = "hashicorp/helm"
-      version = "3.0.2"
+    postgresql = {
+      source  = "cyrilgdn/postgresql"
+      version = "1.26.0"
     }
   }
 }

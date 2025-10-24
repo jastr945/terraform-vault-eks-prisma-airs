@@ -7,6 +7,3 @@ variable "hvn_cidr" {}
 variable "hvn_cloud_provider" {}
 variable "vault_cluster_id" {}
 variable "vault_namespace" {}
-variable "gemini_api_key" {}
-variable "prisma_airs_api_key" {}
-variable "prisma_airs_profile" {}

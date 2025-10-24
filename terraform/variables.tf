@@ -19,8 +19,9 @@ variable "vault_cluster_id" {
   default = "vault-dedicated"
 }
 variable "vault_namespace" {
-  default = "admin"
+  default = "trusted-ai-secrets"
 }
+
 variable "gemini_api_key" {
     description = "LLM API Key"
     type = string
@@ -37,6 +38,7 @@ variable "prisma_airs_profile" {
 variable "app_image" {
   default = "gemini-chatbot"
 }
+
 variable "app_name" {
   default = "ai-chatbot"
 }
@@ -91,4 +93,23 @@ variable "node_instance_types" {
   description = "List of EC2 instance types for the node group"
   type        = list(string)
   default     = ["t3.large"]
+}
+
+variable "db_name" {
+  description = "Unique name to assign to RDS instance"
+  default = "aiagentdb"
+}
+
+variable "db_username" {
+  description = "RDS root username"
+  default = "aiagent"
+}
+
+variable "db_password" {
+  description = "RDS root user password (careful with special chars - not everything is accepted!)"
+  sensitive   = true
+}
+
+variable "db_port" {
+  default = 5432
 }

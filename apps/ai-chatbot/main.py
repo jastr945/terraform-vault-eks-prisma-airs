@@ -13,6 +13,7 @@ from pydantic import BaseModel
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 PRISMA_AIRS_API_KEY = os.getenv("PRISMA_AIRS_API_KEY")
 PRISMA_AIRS_PROFILE = os.getenv("PRISMA_AIRS_PROFILE")
+CHATBOT_WELCOME_MESSAGE = os.getenv("CHATBOT_WELCOME_MESSAGE")
 
 if not GEMINI_API_KEY or not PRISMA_AIRS_API_KEY or not PRISMA_AIRS_PROFILE :
     raise EnvironmentError("GEMINI_API_KEY and PRISMA_AIRS_API_KEY and PRISMA_AIRS_PROFILE must be set.")
@@ -22,7 +23,7 @@ genai.configure(api_key=GEMINI_API_KEY)
 # Initialize the Gemini model
 model = genai.GenerativeModel("gemini-2.0-flash-001")
 
-app = FastAPI()
+app = FastAPI(root_path="/ai-chatbot")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 class Prompt(BaseModel):
@@ -37,8 +38,9 @@ def scan_with_prisma_airs(prompt: str) -> dict:
     }
     payload = {
         "metadata": {
-            "ai_model": "Google GEMINI 2.0 Flash - Test AIRS with Vault, EKS",
-            "app_name": "Vault-EKS-AIRS-test",
+            "ai_model": "Google GEMINI 2.0 Flash - Test AIRS with Vault, AWS EKS",
+            "app_name": "Vault-AWS EKS-AIRS-test",
+            "app_user": "Vault-AWS EKS-AIRS"
         },
         "contents": [
             {"prompt": prompt}
@@ -117,9 +119,9 @@ async def chat(prompt: Prompt):
         "output_verdict": output_scan
     }
 
-@app.get("/token-suffix")
-def token_suffix():
-    return {"suffix": GEMINI_API_KEY[-3:]}
+@app.get("/welcome-message")
+def welcome_message():
+    return {"message": CHATBOT_WELCOME_MESSAGE}
 
 @app.get("/healthcheck")
 def healthcheck():

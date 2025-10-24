@@ -1,0 +1,229 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-chatbot
+  namespace: trusted-ai
+  labels:
+    app: ai-chatbot
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: ai-chatbot
+  template:
+    metadata:
+      labels:
+        app: ai-chatbot
+    spec:
+      containers:
+        - name: ai-chatbot
+          image: 764686269646.dkr.ecr.us-west-2.amazonaws.com/ai-chatbot-eks:latest
+          ports:
+            - containerPort: 5000
+          env:
+            - name: GEMINI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: chatbotkv
+                  key: GEMINI_API_KEY
+            - name: PRISMA_AIRS_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: chatbotkv
+                  key: PRISMA_AIRS_API_KEY
+            - name: PRISMA_AIRS_PROFILE
+              valueFrom:
+                secretKeyRef:
+                  name: chatbotkv
+                  key: PRISMA_AIRS_PROFILE
+            - name: CHATBOT_WELCOME_MESSAGE
+              valueFrom:
+                secretKeyRef:
+                  name: chatbotkv
+                  key: CHATBOT_WELCOME_MESSAGE
+          readinessProbe:
+            httpGet:
+              path: /ai-chatbot/healthcheck
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /ai-chatbot/healthcheck
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-chatbot-svc
+  namespace: trusted-ai
+  labels:
+    app: ai-chatbot
+spec:
+  selector:
+    app: ai-chatbot
+  ports:
+    - port: 80
+      targetPort: 5000
+      protocol: TCP
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-agent
+  namespace: trusted-ai
+  labels:
+    app: ai-agent
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: ai-agent
+  template:
+    metadata:
+      labels:
+        app: ai-agent
+    spec:
+      containers:
+        - name: ai-agent
+          image: 764686269646.dkr.ecr.us-west-2.amazonaws.com/ai-agent-eks:latest
+          ports:
+            - containerPort: 5000
+          env:
+            - name: GEMINI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: chatbotkv
+                  key: GEMINI_API_KEY
+            - name: PRISMA_AIRS_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: chatbotkv
+                  key: PRISMA_AIRS_API_KEY
+            - name: AWS_DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: chatbotkv
+                  key: AWS_DB_HOST
+            - name: PRISMA_AIRS_PROFILE
+              valueFrom:
+                secretKeyRef:
+                  name: chatbotkv
+                  key: PRISMA_AIRS_PROFILE
+            - name: AWS_DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: agentkv
+                  key: username
+            - name: AWS_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: agentkv
+                  key: password
+          readinessProbe:
+            httpGet:
+              path: /ai-agent/healthcheck
+              port: 5001
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /ai-agent/healthcheck
+              port: 5001
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-agent-svc
+  namespace: trusted-ai
+  labels:
+    app: ai-agent
+spec:
+  selector:
+    app: ai-agent
+  ports:
+    - port: 80
+      targetPort: 5001
+      protocol: TCP
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: terraform-mcp
+  namespace: trusted-ai
+  labels:
+    app: terraform-mcp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: terraform-mcp
+  template:
+    metadata:
+      labels:
+        app: terraform-mcp
+    spec:
+      serviceAccountName: default
+      containers:
+        - name: terraform-mcp
+          image: hashicorp/terraform-mcp-server:latest
+          imagePullPolicy: Always
+          env:
+            - name: TRANSPORT_HOST
+              value: "0.0.0.0"
+            - name: TRANSPORT_MODE
+              value: "streamable-http"
+            - name: MCP_SESSION_MODE
+              value: "stateless"
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              cpu: 250m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 20
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: terraform-mcp
+  namespace: trusted-ai
+spec:
+  selector:
+    app: terraform-mcp
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
