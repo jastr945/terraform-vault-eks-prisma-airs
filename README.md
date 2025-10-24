@@ -198,12 +198,6 @@ export KUBERNETES_URL=$(kubectl config view --minify \
 export VAULT_ADDR="<vault cluster url>"
 vault login
 ```
-Paste your token when prompted.
-
-```sh
-export VAULT_ADDR="<vault cluster url>"
-vault login
-```
 Paste your namespace token when prompted.
 
 ```sh
